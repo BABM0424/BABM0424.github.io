@@ -140,7 +140,7 @@
 </nav>
 
     <div class="view intro-2" id="background" parallax=true
-         style="background: url('/img/background1.jpg') no-repeat center center;
+         style="background: url('/img/background4.jpg') no-repeat center center;
            background-size: cover;">
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
@@ -225,7 +225,7 @@
                 System.out.println(i);
             &#125;
             System.out.println(<span class="hljs-string">"finally"</span>);
-            i = <span class="hljs-number">50</span>;
+            i += <span class="hljs-number">30</span>;
         &#125;
         <span class="hljs-keyword">return</span> i;
     &#125;
@@ -255,7 +255,7 @@
     &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;
 
     &#125; <span class="hljs-keyword">finally</span> &#123;
-        i = <span class="hljs-number">50</span>;
+        i += <span class="hljs-number">30</span>;
         <span class="hljs-keyword">return</span> i;
     &#125;
 &#125;
@@ -264,7 +264,7 @@
 
 
 
-<p>但是这样的话<font color=red>case1</font>为什么 <code>i=50</code> 没有执行呢</p>
+<p>但是这样的话<font color=red>case1</font>为什么 <code>i+=30</code> 没有执行呢</p>
 <h2 id="再次搜寻"><a href="#再次搜寻" class="headerlink" title="再次搜寻"></a>再次搜寻</h2><p>因为懒，所以直接百度了一下为什么</p>
 <p>得到的结果如下：</p>
 <blockquote>
@@ -280,28 +280,28 @@
     &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;
     
     &#125; <span class="hljs-keyword">finally</span> &#123;
-        i = <span class="hljs-number">50</span>;
+        i += <span class="hljs-number">30</span>;
     &#125;
     <span class="hljs-keyword">return</span> i;
 &#125;</code></pre>
 
 <p>先看一下编译的.class文件（不同版本的jdk生成的文件可能不一样）</p>
 <pre><code class="hljs java"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> <span class="hljs-title">m_1</span><span class="hljs-params">()</span> </span>&#123;
-    <span class="hljs-keyword">byte</span> var0 = <span class="hljs-number">10</span>;
+    <span class="hljs-keyword">int</span> var0 = <span class="hljs-number">10</span>;
 
     <span class="hljs-keyword">try</span> &#123;
-        <span class="hljs-keyword">int</span> var7 = var0 + <span class="hljs-number">10</span>;
-        <span class="hljs-keyword">int</span> var1 = var7;
+        var0 += <span class="hljs-number">10</span>;
+        <span class="hljs-keyword">int</span> var1 = var0;
         <span class="hljs-keyword">return</span> var1;
     &#125; <span class="hljs-keyword">catch</span> (Exception var5) &#123;
     &#125; <span class="hljs-keyword">finally</span> &#123;
-        var0 = <span class="hljs-number">50</span>;
+        var0 += <span class="hljs-number">30</span>;
     &#125;
 
     <span class="hljs-keyword">return</span> var0;
 &#125;</code></pre>
 
-<p>.class文件可以看出，finally里变化的是 var0，但是return的却是 var1，这样的话确实赋值50给 var0 是不会影响返回 var1 的</p>
+<p>.class文件可以看出，finally里变化的是 var0，但是return的却是 var1，这样的话确实加30给 var0 是不会影响返回 var1 的</p>
 <p>这个机制还是挺有意思的。为了彻底搞清楚try-finally的执行顺序，反汇编一下代码看看</p>
 <p><code>javap -c Main</code></p>
 <pre><code class="hljs shell">  public static int m_1();
